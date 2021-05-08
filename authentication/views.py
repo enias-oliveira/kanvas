@@ -35,7 +35,7 @@ class LoginView(APIView):
 
         if not serialized_request.is_valid():
             return Response(
-                serialized_request.errors, status=status.HTTP_400_BAD_REQUEST
+                serialized_request.errors, status=status.HTTP_401_UNAUTHORIZED
             )
 
         user = authenticate(
