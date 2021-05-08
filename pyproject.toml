@@ -8,6 +8,7 @@ authors = ["Enias Oliveira <eniasoliveira27@gmail.com>"]
 python = "^3.9"
 Django = "^3.2.2"
 djangorestframework = "^3.12.4"
+ipdb = "^0.13.7"
 
 [tool.poetry.dev-dependencies]
 
