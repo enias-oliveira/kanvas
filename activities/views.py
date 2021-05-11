@@ -13,6 +13,17 @@ from .serializers import ActivitySerializer, ActivityGradeSerializer
 from .permissions import ActivityPermission
 
 
+class StaffActivityView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated, ActivityPermission]
+
+    def get(self, request, user_id):
+        activities = Activity.objects.filter(user_id=user_id)
+        serialized_activities = ActivitySerializer(activities, many=True)
+
+        return Response(serialized_activities.data, status.HTTP_200_OK)
+
+
 class ActivityView(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated, ActivityPermission]
