@@ -1,5 +1,8 @@
 from rest_framework import status
 
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -18,10 +21,19 @@ class StaffActivityView(APIView):
     permission_classes = [IsAuthenticated, ActivityPermission]
 
     def get(self, request, user_id):
-        activities = Activity.objects.filter(user_id=user_id)
-        serialized_activities = ActivitySerializer(activities, many=True)
+        try:
+            user = User.objects.get(id=user_id)
+            serialized_activities = ActivitySerializer(
+                user.activity_set,
+                many=True,
+            )
 
-        return Response(serialized_activities.data, status.HTTP_200_OK)
+            return Response(serialized_activities.data, status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response(
+                {"detail": "Invalid user_id."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
 
 
 class ActivityView(APIView):
